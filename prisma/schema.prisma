@@ -17,7 +17,7 @@ model Matches {
   home_score Int
   away_score Int
   date       DateTime
-  finished   Boolean
+  // finished Boolean
 
   @@map("matches")
 }
