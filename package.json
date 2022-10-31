@@ -1,5 +1,5 @@
 {
-  "name": "teste",
+  "name": "football-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,7 +7,7 @@
     "dev": "tsnd --respawn src/server.ts",
     "start": "node dist/server.js",
     "tsc": "./node_modules/typescript/bin/tsc",
-    "build": "tsc"
+    "build": "npm i && tsc"
   },
   "keywords": [],
   "author": "",
