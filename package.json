@@ -7,7 +7,7 @@
     "dev": "tsnd --respawn src/server.ts",
     "start": "node dist/server.js",
     "tsc": "./node_modules/typescript/bin/tsc",
-    "build": "npm i && tsc"
+    "build": "npm i && npx prisma migrate deploy && tsc"
   },
   "keywords": [],
   "author": "",
