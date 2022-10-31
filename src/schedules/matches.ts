@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { scheduleJob } from 'node-schedule';
 import { footballApi } from '../lib/axios';
 import { prisma } from '../prisma/prismaClient';
@@ -22,10 +23,10 @@ interface MatchResponse {
 
 export const job = scheduleJob("*/5 * * * *", async () => {
   console.log("Fetching matches")
-  const startDate = "28/10/2022"
-  const endDate = "31/10/2022"
+  const startDate = "29/10/2022"
+  const todayFormatted = format(new Date(), "dd/MM/yyyy") 
   try {
-    const response = await footballApi.get<MatchResponse>(`/allscores/?langId=31&timezoneName=America/Sao_Paulo&sports=1&startDate=${startDate}&endDate=${endDate}&&withTop=true`);
+    const response = await footballApi.get<MatchResponse>(`/allscores/?langId=31&timezoneName=America/Sao_Paulo&sports=1&startDate=${startDate}&endDate=${todayFormatted}&&withTop=true`);
     let finishedMatches = response.data.games.filter(game => game.statusText === "Fim")
 
     const lastCreated = await prisma.matches.findFirst({
