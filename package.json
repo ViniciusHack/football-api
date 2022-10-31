@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "tsnd --respawn src/server.ts",
     "start": "node dist/server.js",
-    "tsc": "tsc",
-    "build": "npm run tsc"
+    "tsc": "./node_modules/typescript/bin/tsc",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
