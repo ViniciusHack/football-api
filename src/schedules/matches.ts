@@ -23,17 +23,16 @@ interface MatchResponse {
 
 export const job = scheduleJob("*/5 * * * *", async () => {
   console.log("Fetching matches")
-  const startDate = "29/10/2022"
+  const lastCreated = await prisma.matches.findFirst({
+    orderBy: {
+      date: 'desc'
+    }
+  });
+  const startDate = format(new Date(lastCreated?.date ?? new Date()), "dd/MM/yyyy")
   const todayFormatted = format(new Date(), "dd/MM/yyyy") 
   try {
     const response = await footballApi.get<MatchResponse>(`/allscores/?langId=31&timezoneName=America/Sao_Paulo&sports=1&startDate=${startDate}&endDate=${todayFormatted}&&withTop=true`);
     let finishedMatches = response.data.games.filter(game => game.statusText === "Fim")
-
-    const lastCreated = await prisma.matches.findFirst({
-      orderBy: {
-        date: 'desc'
-      }
-    });
     
     const lastIndex = finishedMatches.findIndex(game => game.id === lastCreated?.id);
     
