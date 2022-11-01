@@ -23,18 +23,18 @@ interface MatchResponse {
 
 export const job = scheduleJob("*/5 * * * *", async () => {
   console.log("Fetching matches")
-  const lastCreated = await prisma.matches.findFirst({
+  const lastMatch = await prisma.matches.findFirst({
     orderBy: {
-      date: 'desc'
+      created_at: "desc"
     }
   });
-  const startDate = format(new Date(lastCreated?.date ?? new Date()), "dd/MM/yyyy")
+  const startDate = lastMatch ? format(new Date(lastMatch?.date), "dd/MM/yyyy") : "30/10/2022"
   const todayFormatted = format(new Date(), "dd/MM/yyyy") 
   try {
     const response = await footballApi.get<MatchResponse>(`/allscores/?langId=31&timezoneName=America/Sao_Paulo&sports=1&startDate=${startDate}&endDate=${todayFormatted}&&withTop=true`);
     let finishedMatches = response.data.games.filter(game => game.statusText === "Fim")
     
-    const lastIndex = finishedMatches.findIndex(game => game.id === lastCreated?.id);
+    const lastIndex = finishedMatches.findIndex(game => game.id === lastMatch?.id_external_api);
     
     if(lastIndex !== -1) {
       finishedMatches = finishedMatches.slice(lastIndex + 1)
@@ -42,9 +42,8 @@ export const job = scheduleJob("*/5 * * * *", async () => {
 
     await prisma.matches.createMany({
       data: finishedMatches.map(match => {
-        console.log(match.id)
         return {
-          id: match.id,
+          id_external_api: match.id,
           away_team: match.awayCompetitor.name,
           away_score: Math.round(match.awayCompetitor.score),
           home_team: match.homeCompetitor.name,

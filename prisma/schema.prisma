@@ -11,12 +11,14 @@ datasource db {
 }
 
 model Matches {
-  id         Int      @id
-  home_team  String
-  away_team  String
-  home_score Int
-  away_score Int
-  date       DateTime
+  id              String   @id @default(uuid())
+  id_external_api Int
+  home_team       String
+  away_team       String
+  home_score      Int
+  away_score      Int
+  date            DateTime
+  created_at      DateTime @default(now())
   // finished Boolean
 
   @@map("matches")
